@@ -4,8 +4,6 @@ import sys
 
 import numpy as np
 
-sys.path.append("/workspace/fengningya/DARE_open_source/")
-
 from dataset import SeqRecDataset
 from train_pytorch import create_model
 from tools.logger import CompleteLogger

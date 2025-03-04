@@ -1,14 +1,14 @@
 # Long-Sequence Recommendation Models Need Decoupled Embeddings
 
-This repo provides official code for DARE: Decoupled Attention and Representation Embedding model.
+This repository provides the official implementation of **DARE: Decoupled Attention and Representation Embedding model**.
 
 ## 🔥 News
 
-Our paper have been accepted at **International Conference on Learning Representations** (ICLR 2025).
+Our paper has been accepted to **International Conference on Learning Representations** (ICLR 2025).
 
 ## 🛠️ Environment
 
-There is no strict limit on package versions. If you like, you can use your existing environment supporting pytorch, and install some packages when you need them. It should not be too difficult. Certainly, You can also create a new conda environment and install dependencies using the following command.
+There are no strict package version requirements. You can use your existing environment with PyTorch support and install additional dependencies as needed. If you prefer, you can also set up a new Conda environment using the following commands:
 
 ```
 conda create --name DARE python=3.7
@@ -18,25 +18,23 @@ pip install -r requirements.txt
 
 ## 📦 Dataset
 
-We use the Taobao and Tmall dataset in our code. To download and process the data, please follow [preprocess/README.md](./preprocess/README.md)
+Our experiments use the Taobao and Tmall datasets. To download and preprocess the data, follow the instructions in [preprocess/README.md](./preprocess/README.md).
 
 ## 🚀 Train
 
-We support training **DARE**, **TWIN**, **DIN**, and all their variants in our paper on Taobao and Tmall dataset.
-Example instructions are shown in [scripts/Taobao.sh](./scripts/taobao.sh) and [scripts/tmall.sh](./scripts/tmall.sh) (Explanation of the input parameters can be found at the end of this README.md).
+We support training **DARE**, **TWIN**, **DIN**, and their variants on the Taobao and Tmall datasets.
+Example training scripts can be found in: [scripts/Taobao.sh](./scripts/taobao.sh) and [scripts/tmall.sh](./scripts/tmall.sh) (Explanations of input parameters can be found in [train_pytorch.py](train_pytorch.py)).
 
-For ETA, SDIM and TWIN-V2, their code are not open-source up to now. Please contact the authors of these models for their implementation if you need.
+For **ETA, SDIM, and TWIN-V2**, the code is not yet open-source. If you need their implementations, please contact the respective authors.
 
-Note that there are **many simple tricks**, and adding or removing them may have some influence on the result.
-Besides, there exists some randomness in "Candidate Sampling". So there may be some bias on the absolute result.
-But the relative performance gap should be the same as what we report in our paper.
+Note that there are **various simple tricks** that may affect the results. Adding or removing them could slightly change performance.
+Besides, candidate sampling introduces randomness, leading to slight variations in absolute results. However, the relative performance trends should remain consistent with our paper.
 
 ## 🎇 Analysis
 
-Code for analysis are put in [./analysis](./analysis), including analysis for [attention](./analysis/attention_accuracy_analysis),
+The analysis scripts are located in the [./analysis](./analysis) directory, covering [attention](./analysis/attention_accuracy_analysis),
 [gradient](./analysis/gradient_domination_and_conflict_analysis), [representation](./analysis/gradient_domination_and_conflict_analysis)
-and [training](./analysis/performance_during_training_analysis). There exists a readme.md in each folder. Follow their commands and
-you will get figures like that:
+and [training](./analysis/performance_during_training_analysis). Each folder contains a README.md with instructions. Running the provided commands will generate figures like the following:
 
 <div style="float: left; width: 99%">
 <img src="./figures/model_gsu_idx_4_category_15_attn.png" width="235" height="250" />
@@ -60,7 +58,7 @@ you will get figures like that:
 
 ## 📜 Citation
 
-If you find this project useful, please cite our paper as:
+If you find this project useful, please cite our paper:
 
 ```
 @inproceedings{feng2025DARE,

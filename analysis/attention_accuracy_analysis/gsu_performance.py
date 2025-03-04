@@ -4,7 +4,7 @@ import numpy as np
 import tqdm
 import warnings
 import sys
-sys.path.append("/workspace/fengningya/DARE_open_source/")
+
 from model.din_pytorch import DIN
 import torch
 

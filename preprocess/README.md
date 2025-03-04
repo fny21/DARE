@@ -4,20 +4,22 @@
 
 We use the **Taobao** and **Tmall** datasets. 
 
-You can download the Taobao dataset from this [link](https://tianchi.aliyun.com/dataset/649). 
-Please download ``UserBehavior.csv.zip`` (906M) from this website, unzip it, then you will get ``UserBehavior.csv`` (3.5G). 
-Put it in this path: ``data/taobao/UserBehavior.csv``.
+You can download the **Taobao** dataset from this [link](https://tianchi.aliyun.com/dataset/649). 
 
-You can download the Tmall dataset from this [link](https://tianchi.aliyun.com/dataset/42). 
-Please download ``data_format1 .zip`` (361M). 
-Note that there exists a space in the file name, and it may cause some trouble. 
-So it's highly recommended to first rename it as ``data_format1.zip``. 
-Unzip it, then you will get four files. Among them, we only need ``user_log_format1.csv`` (1.8G).
-Put it in this path: ``data/tmall/user_log_format1.csv``.
+- Download ``UserBehavior.csv.zip`` (906M).
+- Unzip it to obtain ``UserBehavior.csv`` (3.5G).
+- Place it in: ``data/taobao/UserBehavior.csv``.
 
-## Preprocess
+You can download the **Tmall** dataset from this [link](https://tianchi.aliyun.com/dataset/42).
+
+- Download ``data_format1 .zip`` (361M). 
+- Note: There is an extra space in the filename, which may cause issues. It is recommended to rename it to ``data_format1.zip`` before extracting.
+- Unzip it to obtain four files. Among them, we only need ``user_log_format1.csv`` (1.8G).
+- Place it in: ``data/tmall/user_log_format1.csv``.
+
+## Preprocessing
 To our knowledge, some versions of numpy will raise error like *The requested array has an inhomogeneous shape after 1 dimensions.* 
-We believe we have fixed this issue. In case you still meet this error, you can simply add ``dtype=object`` when reading or saving a npy file to solve it.
+We believe this issue has been resolved in our code. However, if you still encounter it, you can manually add ``dtype=object`` when reading or saving ``.npy`` files to fix it.
 
 Taobao:
 
@@ -26,9 +28,9 @@ cd preprocess
 python taobao_v4.py
 ```
 
-You will get ``train_{0001~0048}_{data_num}.npy``, ``val.npy`` and ``test.npy`` in the data/taobao folder.
+After execution, the processed files will be stored in ``data/taobao``, including ``train_{0001~0048}_{data_num}.npy``, ``val.npy`` and ``test.npy``.
 
-The training dataset is very large, so we divide and store it in many files, and load them sequentially in the training process. This can avoid "out of memory" error.
+Since the training dataset is large, it is **split into multiple files** and loaded sequentially during training to **prevent out-of-memory (OOM)** errors.
 
 Tmall:
 
@@ -37,17 +39,19 @@ python tmall_sort_log.py
 python tmall_v4.py
 ```
 
-The data in ``user_log_format1.csv`` has not been sorted by time. So we need to sort them first. Other operations are quite similar to Taobao dataset.
+The ``user_log_format1.csv`` file is not time-ordered. We first sort it before performing further processing.
+
+Other preprocessing steps are similar to those for the Taobao dataset.
 
 
 
 ## Data Process Details
 
-The following information may be helpful if you want to follow our code and do some further analysis.
+This section provides useful insights if you wish to modify or analyze the dataset further.
 
 ### data format
 
-After pre-processing, each sample will contain the following feature:
+After pre-processing, each sample consists of the following features:
 
 - uid: the ID of the user (not used in our code).
 - target_iid: the item ID of the candidate.
@@ -56,16 +60,16 @@ After pre-processing, each sample will contain the following feature:
 - hist_iid: a list of item IDs that the user clicked in the history.
 - hist_cid: a list of category IDs that the user clicked in the history.
 
-### information about hist_iid and hist_cid
+### Understanding ``hist_iid`` and ``hist_cid``
 
-- They are sorted by time. hist_iid[-1] indicates the latest item that the user clicked; while hist_iid[0] refers to an item that is clicked a long time ago.
-- Clip: the maximum length is 200. If a user history is too long, only recent 200 behaviors are reserved. 
-- Pad：Pad with 0 if user history is shorter than 200.
+- The interaction history is sorted by time. hist_iid[-1] is the most recent interaction; while hist_iid[0] is the earliest recorded interaction.
+- Clip: the maximum length is 200. If a user has more than 200 historical interactions, only the most recent 200 are kept.
+- Pad：If a user has fewer than 200 interactions, zeros are padded.
 
 ### train/val/test split
 
-- We filter out the users with history length less than 210.
-- For a user with 300 behaviors ([1~300], heiger index means more recent), the train/val/test dataset will contain:
+- We filter out users with fewer than 210 interactions.
+- Suppose a user has 300 interactions ([1~300], heiger index means more recent), the train/val/test dataset will contain:
   - train: for j in range(19):  
     - i = 298 - 5 * j
     - given: [i-200 ~ i-1]
@@ -77,20 +81,19 @@ After pre-processing, each sample will contain the following feature:
     - given: [100 ~ 299]
     - to predict: [300]
 
-As we pointed out in our paper, in recommendation system, there are too many items and relatively too little training data, 
-making the models suffer from "under-fitting". So we sample more than one piece of data from one user to expand the training dataset.
-However, this would break the "independent identical distribution" principle, reducing the quality of data.
+As we pointed out in our paper, In recommendation systems, the number of items is vast, but training data is relatively scarce, leading to underfitting.
+To mitigate this, we extract multiple training samples per user.
+However, this violates the "independent identical distribution" principle, slightly compromising data quality.
 
 Thus, we finally make a trade-off and process the data like that, mainly for the two reason: 
 for each user, there are 20 pieces of data visible in the training process; there is no padding in the test dataset. 
-Experiments show that under this setting, all models are likely to perform better.
+Experimental results show that this strategy significantly improves model performance.
 
-It's not easy to balance data quality and data quantity. If you would like to follow our research,
-you can use our setting, or define your own processing method.
+It's not easy to balance data quality and data quantity. If you wish to follow our research, you can use our dataset setup or define your own.
 
 ### Candidate Sampling
 
-- The negative candidate is randomly sampled. 
-- All item that **has not been clicked in the history** may be chosen.
-- The probability is proportional to the frequency that it occurs in the whole dataset.
-- There are two times negative candidates than positive ones.
+- The negative candidates are randomly sampled. 
+- A negative candidate must **not** have been clicked by the user in history.
+- The sampling probability **is proportional to its frequency** in the entire dataset.
+- There are twice as many negative candidates as positive ones.

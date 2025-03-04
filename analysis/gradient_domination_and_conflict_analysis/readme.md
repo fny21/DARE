@@ -5,7 +5,7 @@ Its working principle is explained later in this README.md
 
 For example, collect the gradient of TWIN on Taobao Dataset:
 ```
-CUDA_VISIBLE_DEVICES=4 python train_pytorch.py -train_dataset_path 'data/taobao/train_{}_{}.npy' -val_dataset_path 'data/taobao/val.npy' -test_dataset_path 'data/taobao/test.npy' -max_length 200 -item_n 4068791 -cate_n 9408 -long_seq_split '0:200' -short_model_type DIN -long_model_type DIN -use_cross_feature True -attn_func scaled_dot_product -hard_or_soft soft -top_k 20 -use_aux_loss True -use_time_mode concat -time_embedding_dim 16 -epoch 2 -category_embedding_dim 16 -batch_size 2048 -learning_rate 0.01 -weight_decay 0.000001 -seed 1 -log_dir log/taobao/model_twin_stor_grad -test_interval 150 -log_interval 50 -model_name twin -stor_grad -observe_attn_repr_grad
+python train_pytorch.py -train_dataset_path 'data/taobao/train_{}_{}.npy' -val_dataset_path 'data/taobao/val.npy' -test_dataset_path 'data/taobao/test.npy' -max_length 200 -item_n 4068791 -cate_n 9408 -long_seq_split '0:200' -short_model_type DIN -long_model_type DIN -use_cross_feature True -attn_func scaled_dot_product -hard_or_soft soft -top_k 20 -use_aux_loss True -use_time_mode concat -time_embedding_dim 16 -epoch 2 -category_embedding_dim 16 -batch_size 2048 -learning_rate 0.01 -weight_decay 0.000001 -seed 1 -log_dir log/taobao/model_twin_stor_grad -test_interval 150 -log_interval 50 -model_name twin -stor_grad -observe_attn_repr_grad
 ```
 
 Then you can observe the gradient conflict, category-grouped gradient conflict, and gradient domination with the following command:
@@ -17,8 +17,10 @@ python gradient_domination.py
 
 You will get pictures like that:
 
+<div style="float: left; width: 99%">
 <img src="../../figures/angle_distribution.png" width="244" height="170" />
 <img src="../../figures/taobao_grad_conflict_per_category.png" width="244" height="190" />
+</div>
 
 Note that **the gradients may vary a lot during the training process**.
 You can change our code and analysis the gradients of different training period as you like.
