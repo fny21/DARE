@@ -38,18 +38,25 @@ Code for analysis are put in [./analysis](./analysis), including analysis for [a
 and [training](./analysis/performance_during_training_analysis). There exists a readme.md in each folder. Follow their commands and
 you will get figures like that:
 
+<div style="float: left; width: 99%">
 <img src="./figures/model_gsu_idx_4_category_15_attn.png" width="235" height="250" />
 <img src="./figures/idx_4_category_15.png" width="235" height="250" />
-<br>
+</div>
+
+<div style="float: left; width: 99%">
 <img src="./figures/taobao_gsu_result.png" width="235" height="220" />
 <img src="./figures/index_119983_category_7.png" width="390" height="220" />
-<br>
+</div>
+
+<div style="float: left; width: 99%">
 <img src="./figures/angle_distribution.png" width="235" height="170" />
 <img src="./figures/taobao_grad_conflict_per_category.png" width="244" height="170" />
-<br>
+</div>
+
+<div style="float: left; width: 99%">
 <img src="./figures/Tmall_representation_discriminability.png" width="235" height="210" />
 <img src="./figures/Tmall_odot_analysis.png" width="235" height="210" />
-
+</div>
 
 ## 📜 Citation
 
@@ -71,41 +78,4 @@ If you have any question, please contact fny21@mails.tsinghua.edu.cn
 ## 💡 Acknowledgement
 
 Our code is based on [SIM Official Code](https://github.com/tttwwy/sim) and [UBR4CTR](https://github.com/qinjr/UBR4CTR).
-
-## Appendix: parameter information
-
-dataset parameters
-
-| parameter | meaning | 
-|-------|-------|
-|max_length|the maximum history behavior length of a user|
-|item_n|total item number in the whole dataset|
-|cate_n|total category number in the whole dataset|
-
-model config parameters
-
-| parameter                 | meaning                                                                                                                                                                                                                                                                                                                                                | 
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| short_seq_split           | if not None, the assigned short sequence will always be retrieved (will not be counted in the "top_k")                                                                                                                                                                                                                                                 |
-| short_model_type          | we only support DIN now. You can add other different basic models.                                                                                                                                                                                                                                                                                     |
-| long_model_type           | we only support DIN now.                                                                                                                                                                                                                                                                                                                               |
-| attn_func                 | "learnable" for DIN, and "scale dot product" for other models.                                                                                                                                                                                                                                                                                         |
-| hard_or_soft              | use hard search or soft search in the retrieval. We focus on soft search in our experiments.                                                                                                                                                                                                                                                           |
-| top_k                     | the model will retrieve -top_k behaviors from history behaviors.                                                                                                                                                                                                                                                                                       |
-| use_time                  | DIN do not use time information, while others use time information.                                                                                                                                                                                                                                                                                    |
-| use_time_mode             | We focus on "concat" in our experiments, meaning an item will be embedded into torch.cat([item_embed, category_embed, time_embed])                                                                                                                                                                                                                     |
-| model_name                | **An important parameter**. The model you use. Options include "DARE", "TWIN", "DIN", and so on.                                                                                                                                                                                                                                                       |
-| use_aux_loss              | a simple trick that may benefit model training. You can find it in model/din_pytorch.py.                                                                                                                                                                                                                                                               |
-| use_long_seq_average      | a simple trick that may benefit model training.                                                                                                                                                                                                                                                                                                        |
-| mlp_position_after_concat | if you use projection to decouple the modules, there are two options: <br> 1. projection(torch.cat([item_embed, category_embed, time_embed]))  (-mlp_position_after_concat = True) <br> 2. torch.cat([item_embed, category_embed, time_embed])  (-mlp_position_after_concat = False) <br> We use -mlp_position_after_concat = True in our experiments. |
-| avoid_domination          | one of the decoupling methods we tried. If set to True, we will manually update the gradients to keep their size the same.                                                                                                                                                                                                                             |                                                                                                                                                                                                                 
-| only_odot                 | by default, our input of the final MLP is [history, target, history \odot target]. If set to True, it will be [history \odot target].                                                                                                                                                                                                                  |                                                                                                                                                                                                     
-| use_cross_feature         | use target representation (the \\odot product) or not.                                                                                                                                                                                                                                                                                                 |                                                                                                                                                                                                                                                                                    
-
-hyperparameter parameters
-
-| parameter                                    | meaning                                                                                                                                   | 
-|----------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| attention_{time/category/time}_embedding_dim | This is the parameter specially for DARE, since DARE supports using different embedding dimension for attention and representation.       |
-| mlp_hidden_layer                             | this is the parameter specially for "projection_with_mlp" (changing the linear projection to MLP in TWIN w/ proj), defining the MLP size. |
 
