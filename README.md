@@ -36,25 +36,8 @@ The analysis scripts are located in the [./analysis](./analysis) directory, cove
 [gradient](./analysis/gradient_domination_and_conflict_analysis), [representation](./analysis/gradient_domination_and_conflict_analysis)
 and [training](./analysis/performance_during_training_analysis). Each folder contains a README.md with instructions. Running the provided commands will generate figures like the following:
 
-<div style="float: left; width: 99%">
-<img src="./figures/model_gsu_idx_4_category_15_attn.png" width="235" height="250" />
-<img src="./figures/idx_4_category_15.png" width="235" height="250" />
-</div>
+<img src="./figures/analysis_results.png" width="850" height="382" />
 
-<div style="float: left; width: 99%">
-<img src="./figures/taobao_gsu_result.png" width="235" height="220" />
-<img src="./figures/index_119983_category_7.png" width="390" height="220" />
-</div>
-
-<div style="float: left; width: 99%">
-<img src="./figures/angle_distribution.png" width="235" height="170" />
-<img src="./figures/taobao_grad_conflict_per_category.png" width="244" height="170" />
-</div>
-
-<div style="float: left; width: 99%">
-<img src="./figures/Tmall_representation_discriminability.png" width="235" height="210" />
-<img src="./figures/Tmall_odot_analysis.png" width="235" height="210" />
-</div>
 
 ## 📜 Citation
 
